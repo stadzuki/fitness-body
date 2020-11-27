@@ -10,6 +10,32 @@
     <link rel="stylesheet" href="/font-awesome.min.87167abf.css">
     <link rel="stylesheet" href="/style.min.d6305865.css">
     <script src="/scripts.bcf3243b.js" defer=""></script>
+    <style>.dot{
+            width: 35px;
+            height: 5px;
+            background-color: #fff;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .dot:last-child{
+            margin-right: 0;
+        }
+        .dot-active {
+            background-color: #ffd11a;
+        }
+
+        #totop {
+            display: none;
+        }
+
+        .posFixed{
+            position: fixed;
+            top: 0px;
+        }
+
+        .arrow-slider {
+            cursor: pointer;
+        }</style>
 <script src="/font-awesome.min.87167abf.js"></script><script src="/style.min.d6305865.js"></script><script src="/mozaika.js"></script></head>
 
 <body>
@@ -65,7 +91,7 @@
                 </div>
             </div>
         </nav>
-        <nav class="popup-menu hidden-large">
+        <nav class="popup-menu">
             <div class="close-menu-btn">
                 <img src="/delete.0ca3ab0c.png" alt="">
             </div>
@@ -283,7 +309,13 @@
         <h2>Фотогалерея</h2>
         <div class="gallery-bg">
             <div class="wrapper">
-                <div class="gallery-slider">
+                <div class="gallery-slider" style="position: relative;">
+                    <div class="arrow-slider arrow-left" style="position: absolute; background-color: #ffd11a; padding: 10px; left: 55px; top: 45%;">
+                        <img src="/arrow-left.7fec79ef.png" alt="">
+                    </div>
+                    <div class="arrow-slider arrow-right" style="position: absolute; background-color: #ffd11a; padding: 10px; right: 55px; top: 45%;">
+                        <img src="/arrow-right.b154d106.png" alt="">
+                    </div>
                     <div class="slide">
                         <img src="/photo1.6d46d02b.jpg" alt="">
                     </div>
@@ -299,6 +331,9 @@
                     <div class="slide">
                         <img src="/photo5.238ebcb3.jpg" alt="">
                     </div>
+                    <ul class="dots" style="position: absolute; display: flex; bottom: 15px; left: 38%;">
+                    </ul>
+                    
                 </div>
             </div>
         </div>

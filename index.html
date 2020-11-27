@@ -10,6 +10,34 @@
     <link rel="stylesheet" href="css/font-awesome.min.css">
     <link rel="stylesheet" href="css/style.min.css">
     <script src="scripts/index.js" defer></script>
+    <style>
+        .dot{
+            width: 35px;
+            height: 5px;
+            background-color: #fff;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+        .dot:last-child{
+            margin-right: 0;
+        }
+        .dot-active {
+            background-color: #ffd11a;
+        }
+
+        #totop {
+            display: none;
+        }
+
+        .posFixed{
+            position: fixed;
+            top: 0px;
+        }
+
+        .arrow-slider {
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
@@ -65,7 +93,7 @@
                 </div>
             </div>
         </nav>
-        <nav class="popup-menu hidden-large">
+        <nav class="popup-menu">
             <div class="close-menu-btn">
                 <img src="images/delete.png" alt="">
             </div>
@@ -283,7 +311,13 @@
         <h2>Фотогалерея</h2>
         <div class="gallery-bg">
             <div class="wrapper">
-                <div class="gallery-slider">
+                <div class="gallery-slider" style="position: relative;">
+                    <div class="arrow-slider arrow-left" style="position: absolute; background-color: #ffd11a; padding: 10px; left: 55px; top: 45%;">
+                        <img src="./images/arrow-left.png" alt="">
+                    </div>
+                    <div class="arrow-slider arrow-right" style="position: absolute; background-color: #ffd11a; padding: 10px; right: 55px; top: 45%;">
+                        <img src="./images/arrow-right.png" alt="">
+                    </div>
                     <div class="slide">
                         <img src="images/gallery/photo1.jpg" alt="">
                     </div>
@@ -299,6 +333,9 @@
                     <div class="slide">
                         <img src="images/gallery/photo5.jpg" alt="">
                     </div>
+                    <ul class="dots" style="position: absolute; display: flex; bottom: 15px; left: 38%;">
+                    </ul>
+                    
                 </div>
             </div>
         </div>

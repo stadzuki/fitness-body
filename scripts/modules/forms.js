@@ -1,6 +1,9 @@
+let radiuStatus = false;
+
 const formInit = () => {
     formPopup();
     formPage();
+    formFooter();
 }
 
 const formPopup = () => {
@@ -12,7 +15,12 @@ const formPopup = () => {
 
 const formPage = () => {
     const form = document.getElementById('banner-form');
-    console.log(form);
+    postForm(form.id);
+}
+
+const formFooter = () => {
+    const form = document.getElementById('footer_form');
+    postForm(form.id); 
 }
 
 const closePopup = () => {
@@ -58,6 +66,13 @@ const isValid = (inputs) => {
                 break;
             }
         }
+        if(key.type === 'radio') {
+            if(!radiuStatus) {
+                alert('Выберите клуб');
+                status = false;
+                break;
+            }
+        }
     }
     return status;
 }
@@ -72,6 +87,10 @@ const postForm = (selector) => {
 
         if (target.closest('.close-form') || target.closest('.overlay')) {
             closePopup();
+        }
+
+        if(target.closest('.club')) {
+            radiuStatus = true;
         }
     })
 

@@ -1,19 +1,116 @@
+let interval;
+
 const mainSlider = () => {
     const slider = document.querySelector('.main-slider').children;  
-    autoplay(slider);  
+    play(slider);  
 }
 
-const autoplay = (currientSlider) => {
+const gallerySlider = () => {
+    const slider = document.querySelectorAll('.gallery-slider .slide');
+    for(let key of slider) {
+        key.style.display = 'none';
+    } 
+    slider[0].style.display = 'block';
+    createDots(slider);
+    play(slider, true);  
+}
+
+const createDots = (selector) => {
+    const ul = document.querySelector('.gallery-slider .dots');
+
+    for(let i = 0; i < selector.length; i++) {
+        const li = document.createElement('li');
+        li.classList.add('dot');
+        ul.append(li);
+    }
+
+    ul.children[0].classList.add('dot-active');
+}
+
+const play = (currientSlider, styleDot) => {
+    let dots;
     let counter = 0;
 
-    setInterval(() => {
-        prevSlide(currientSlider[counter]);
+    if(styleDot === true) {
+        dots = document.querySelectorAll('.gallery-slider .dot');
+    }
 
-        counter++;
-        if(counter > currientSlider.length - 1) counter = 0;
+    const autoplay = () => {
+        interval = setInterval(() => {
+            prevSlide(currientSlider[counter]);
+            styleDot === true ? prevDot(dots[counter]) : false;
+    
+            counter++;
+            if(counter > currientSlider.length - 1) counter = 0;
+    
+            nextSlide(currientSlider[counter]);
+            styleDot === true ? nextDot(dots[counter]) : false;
+        }, 2500);
+    }
+    autoplay();
 
-        nextSlide(currientSlider[counter]);
-    }, 2500);
+    const startSlider = () => {
+        autoplay();
+    }
+    
+    const stopSlider = () => {
+        clearInterval(interval);
+    }
+
+    if(styleDot === true) {
+        const slider = currientSlider[0].parentNode;
+
+        const clickDots = () => {
+            dots.forEach((item, index) => item.addEventListener('click', e => {
+                if(!e.target.matches('.dot-active')) {
+                    prevSlide(currientSlider[counter]);
+                    prevDot(dots[counter]);
+
+                    counter = index;
+
+                    nextSlide(currientSlider[counter]);
+                    nextDot(dots[counter]);
+                }
+            }))
+        }
+        clickDots();
+
+        slider.addEventListener('mouseover', e => {
+            if(e.target.closest('.dot') || e.target.closest('.arrow-slider')) {
+                stopSlider();
+            }
+        });
+
+        slider.addEventListener('mouseout', e => {
+            if(e.target.closest('.dot') || e.target.closest('.arrow-slider')) {
+                startSlider();
+            }
+        });
+
+        slider.addEventListener('click', e => {
+            if(e.target.closest('.arrow-left')) {
+                prevSlide(currientSlider[counter]);
+                prevDot(dots[counter]);
+
+                counter--;
+                if(counter < 0) counter = currientSlider.length - 1;
+
+                nextSlide(currientSlider[counter]);
+                nextDot(dots[counter]);
+            }
+
+            if(e.target.closest('.arrow-right')) {
+                prevSlide(currientSlider[counter]);
+                prevDot(dots[counter]);
+
+                counter++;
+                if(counter > currientSlider.length - 1) counter = 0;
+
+                nextSlide(currientSlider[counter]);
+                nextDot(dots[counter]);
+            }
+        })
+    }
 }
 
 const prevSlide = (elem) => {
@@ -24,6 +121,15 @@ const nextSlide = (elem) => {
     elem.style.display = 'flex';
 }
 
+const prevDot = elem => {
+    elem.classList.remove('dot-active');
+}
+
+const nextDot = elem => {
+    elem.classList.add('dot-active');
+}
+
 export default function sliderInit() {
     mainSlider();
+    gallerySlider();
 }
