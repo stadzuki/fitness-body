@@ -1,9 +1,28 @@
-let radiuStatus = false;
+import clubs from './calc';
+
+let tempPrice = clubs.mozaika.monthPay.oneMonth,
+    selectedClub = clubs.mozaika,
+    month = 1;
+
+let priceTotal;
+
+const cardOrder = document.getElementById('card_order');
+
+for(let key of cardOrder) {
+    if(key.name === 'promo') {
+        console.log(1);
+        priceTotal = document.getElementById('price-total');
+        priceTotal.textContent = tempPrice;
+    }
+}
+
+let radiuStatus = true;
 
 const formInit = () => {
     formPopup();
     formPage();
     formFooter();
+    formCalc();
 }
 
 const formPopup = () => {
@@ -19,14 +38,66 @@ const formPage = () => {
 }
 
 const formFooter = () => {
+    radiuStatus = false;
     const form = document.getElementById('footer_form');
-    postForm(form.id); 
+    postForm(form.id);
 }
+
+const formCalc = () => {
+    const form = document.getElementById('card_order');
+
+    const getMonth = (elem, club) => {
+        switch (elem) {
+            case 1: {
+                tempPrice = club.monthPay.oneMonth;
+                month = 1;
+                break;
+            }
+            case 6: {
+                tempPrice = club.monthPay.sixMonth;
+                month = 6;
+                break;
+            }
+            case 9: {
+                tempPrice = club.monthPay.nineMonth;
+                month = 9;
+                break;
+            }
+            case 12: {
+                tempPrice = club.monthPay.twelfth;
+                month = 12;
+                break;
+            }
+        }
+        priceTotal.textContent = tempPrice;
+    }
+
+    const changeClub = (target) => {
+        if (target.value === 'mozaika') {
+            selectedClub = clubs.mozaika;
+        } else {
+            selectedClub = clubs.schelkovo;
+        }
+        getMonth(month, selectedClub);
+    }
+
+    form.addEventListener('click', e => {
+        if (e.target.closest('.time input')) {
+            getMonth(+e.target.value, selectedClub);
+        }
+
+        if (e.target.closest('.club')) {
+            changeClub(e.target);
+        }
+    })
+    postForm(form.id);
+}
+
 
 const closePopup = () => {
     const popup = document.querySelectorAll('.popup');
 
-    for(let i = 0; i < popup.length; i++) {
+    for (let i = 0; i < popup.length; i++) {
         popup[i].style.display = '';
     }
 }
@@ -44,33 +115,39 @@ const postData = (data) => {
 
 const isValid = (inputs) => {
     let status = true;
-    for(let key of inputs) {
+    for (let key of inputs) {
         if (key.name === 'name') {
-            if(/^[А-я]{0,32}$/.test(key.value) === false) {
+            if (/^[А-я]{0,32}$/.test(key.value) === false) {
                 alert('Поле "имя" заполнено неправильно');
                 status = false;
                 break;
             }
         }
         if (key.name === 'phone') {
-            if(/^\+?7[0-9]{3}[0-9]{7}$/.test(key.value) === false) {
+            if (/^\+?7[0-9]{3}[0-9]{7}$/.test(key.value) === false) {
                 alert('Поле "телефон" заполнено неправильно');
                 status = false;
                 break;
             }
-        }  
-        if(key.type === 'checkbox') {
-            if(key.checked === false) {
+        }
+        if (key.type === 'checkbox') {
+            if (key.checked === false) {
                 alert('Вы не дали право на обработку данных');
                 status = false;
                 break;
             }
         }
-        if(key.type === 'radio') {
-            if(!radiuStatus) {
+        if (key.type === 'radio' && key.name === 'club-name') {
+            if (radiuStatus === false) {
                 alert('Выберите клуб');
                 status = false;
                 break;
+            }
+        }
+        if (key.name === 'promo') {
+            if (key.value === clubs.promocode) {
+                tempPrice *= 0.3;
+                priceTotal.textContent = Math.floor(tempPrice);
             }
         }
     }
@@ -83,13 +160,15 @@ const postForm = (selector) => {
         inputs = form.querySelectorAll('input');
 
     document.body.addEventListener('click', e => {
-        const {target } = e;
+        const {
+            target
+        } = e;
 
-        if (target.closest('.close-form') || target.closest('.overlay')) {
+        if (target.closest('.close-form') || target.closest('.overlay') || target.closest('.close-btn')) {
             closePopup();
         }
 
-        if(target.closest('.club')) {
+        if (target.closest('.club')) {
             radiuStatus = true;
         }
     })
@@ -97,15 +176,17 @@ const postForm = (selector) => {
     form.addEventListener('submit', e => {
         e.preventDefault();
 
-        const {target} = e,
-            notif = document.createElement('div'),
+        const {
+            target
+        } = e,
+        notif = document.createElement('div'),
             typeErrors = {
                 successPost: 'Данные успешно отправлены',
                 sendingPost: 'Отправка...',
                 failedPost: 'Ошибка! Данные не отправлены'
             }
 
-        if(isValid(inputs) === false) return;
+        if (!isValid(inputs)) return;
 
         const formData = new FormData(form),
             data = {};
@@ -113,9 +194,9 @@ const postForm = (selector) => {
         formData.forEach((key, index) => {
             data[index] = key
         });
-        
+
         form.appendChild(notif);
-        notif.style.color = 'white';
+        notif.style.color = 'red';
         notif.style.marginTop = '20px';
         notif.textContent = typeErrors.sendingPost;
 
@@ -128,7 +209,8 @@ const postForm = (selector) => {
                 let timer = setTimeout(() => {
                     closePopup();
                     clearTimeout(timer);
-                }, 2000)
+                }, 2000);
+                const thanks = document.getElementById('thanks').style.display = 'block';
             })
             .catch(error => {
                 notif.textContent = typeErrors.failedPost;
