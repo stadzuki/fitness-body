@@ -6,17 +6,16 @@ let tempPrice = clubs.mozaika.monthPay.oneMonth,
 
 let priceTotal;
 
+let radioActive = 0;
+
 const cardOrder = document.getElementById('card_order');
 
 for(let key of cardOrder) {
     if(key.name === 'promo') {
-        console.log(1);
         priceTotal = document.getElementById('price-total');
         priceTotal.textContent = tempPrice;
     }
 }
-
-let radiuStatus = true;
 
 const formInit = () => {
     formPopup();
@@ -38,7 +37,6 @@ const formPage = () => {
 }
 
 const formFooter = () => {
-    radiuStatus = false;
     const form = document.getElementById('footer_form');
     postForm(form.id);
 }
@@ -138,9 +136,13 @@ const isValid = (inputs) => {
             }
         }
         if (key.type === 'radio' && key.name === 'club-name') {
-            if (radiuStatus === false) {
+            if (key.checked === false) {
+                radioActive += 1;
+            }
+            if(radioActive === 2) {
                 alert('Выберите клуб');
                 status = false;
+                radioActive = 0;
                 break;
             }
         }
@@ -168,9 +170,9 @@ const postForm = (selector) => {
             closePopup();
         }
 
-        if (target.closest('.club')) {
-            radiuStatus = true;
-        }
+        // if (target.closest('.club')) {
+        //     radiuStatus = true;
+        // }
     })
 
     form.addEventListener('submit', e => {
@@ -208,6 +210,7 @@ const postForm = (selector) => {
                 notif.textContent = typeErrors.successPost;
                 let timer = setTimeout(() => {
                     closePopup();
+                    notif.textContent = '';
                     clearTimeout(timer);
                 }, 2000);
                 const thanks = document.getElementById('thanks').style.display = 'block';

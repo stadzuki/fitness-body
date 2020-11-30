@@ -15,7 +15,7 @@ const clubs = {
             twelfth: 19900
         },
     },
-    promocode: 'body2020',
+    promocode: 'ТЕЛО2020',
 }
 
 export default clubs;
