@@ -2,30 +2,36 @@ let interval;
 
 const caruselSlider = () => {
     const slider = document.getElementById('services'),
+        btns = document.querySelectorAll('#services .arrow-slider'),
         slide = slider.querySelectorAll('.slide');
 
-    let currientPos = 1,
-        lineScroll;
+    let currientPos = 0,
+        lineScroll = 235;
 
+    btns[0].style.display = 'none';
 
     slider.addEventListener('click', e => {
-        if(e.target.closest('.arrow-left')) {
-            lineScroll = currientPos * 235;
+        if(e.target.matches('.arrow-left') || e.target.matches('.arrow-left img')) {
             currientPos--;
-            if(currientPos > slide.length - 4) e.target.style.display = 'none';
+            lineScroll = -currientPos * 235;
             for(let i = 0; i < slide.length; i++) {
-                slide[i].style.transform = `translateX(-${lineScroll}px)`;
+                slide[i].style.transform = `translateX(${lineScroll}px)`;
             }
         }
 
         if(e.target.matches('.arrow-right') || e.target.matches('.arrow-right img')) {
-            lineScroll = currientPos * 235;
             currientPos++;
-            if(currientPos > slide.length - 4) e.target.style.display = 'none';
+            lineScroll = currientPos * 235;
             for(let i = 0; i < slide.length; i++) {
                 slide[i].style.transform = `translateX(-${lineScroll}px)`;
             }
         }
+
+        if(currientPos > 0) btns[0].style.display = 'block';
+        else btns[0].style.display = 'none';
+
+        if(currientPos > slide.length - 5) btns[1].style.display = 'none';
+        else btns[1].style.display = 'block';
     })
 }
 
