@@ -1,5 +1,34 @@
 let interval;
 
+const caruselSlider = () => {
+    const slider = document.getElementById('services'),
+        slide = slider.querySelectorAll('.slide');
+
+    let currientPos = 1,
+        lineScroll;
+
+
+    slider.addEventListener('click', e => {
+        if(e.target.closest('.arrow-left')) {
+            lineScroll = currientPos * 235;
+            currientPos--;
+            if(currientPos > slide.length - 4) e.target.style.display = 'none';
+            for(let i = 0; i < slide.length; i++) {
+                slide[i].style.transform = `translateX(-${lineScroll}px)`;
+            }
+        }
+
+        if(e.target.matches('.arrow-right') || e.target.matches('.arrow-right img')) {
+            lineScroll = currientPos * 235;
+            currientPos++;
+            if(currientPos > slide.length - 4) e.target.style.display = 'none';
+            for(let i = 0; i < slide.length; i++) {
+                slide[i].style.transform = `translateX(-${lineScroll}px)`;
+            }
+        }
+    })
+}
+
 const mainSlider = () => {
     const slider = document.querySelector('.main-slider').children;  
     play(slider);  
@@ -132,4 +161,5 @@ const nextDot = elem => {
 export default function sliderInit() {
     mainSlider();
     gallerySlider();
+    caruselSlider();
 }

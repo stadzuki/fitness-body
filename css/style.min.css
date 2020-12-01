@@ -1536,21 +1536,21 @@ nav.popup-menu .close-menu-btn img {
 }
 
 .services-slider {
-    display: flex;
+    height: 300px;
+    width: 915px;
     margin: 0 auto;
-    padding-left: 15px;
-    padding-right: 15px
+    display: flex;
+    overflow: hidden;
 }
 
 .services-slider .slide {
     text-align: center;
-    margin-right: 6px;
-    margin-left: 6px;
-    width: 210px
+    margin-right: 25px;
 }
 
 .services-slider .slide img {
-    margin: 0 auto 19px
+    margin: 0 auto 19px;
+    min-width: 210px;
 }
 
 .services-slider .slide h6 {
