@@ -146,12 +146,12 @@ const isValid = (inputs) => {
                 break;
             }
         }
-        if (key.name === 'promo') {
-            if (key.value === clubs.promocode) {
-                tempPrice *= 0.3;
-                priceTotal.textContent = Math.floor(tempPrice);
-            }
-        }
+        // if (key.name === 'promo') {
+        //     if (key.value === clubs.promocode) {
+        //         tempPrice *= 0.3;
+        //         priceTotal.textContent = Math.floor(tempPrice);
+        //     }
+        // }
     }
     return status;
 }
@@ -169,10 +169,15 @@ const postForm = (selector) => {
         if (target.closest('.close-form') || target.closest('.overlay') || target.closest('.close-btn')) {
             closePopup();
         }
+    })
 
-        // if (target.closest('.club')) {
-        //     radiuStatus = true;
-        // }
+    form.addEventListener('input', e => {
+        if (e.target.name === 'promo') {
+            if (e.target.value === clubs.promocode) {
+                tempPrice *= 0.3;
+                priceTotal.textContent = Math.floor(tempPrice);
+            }
+        }
     })
 
     form.addEventListener('submit', e => {
@@ -189,6 +194,8 @@ const postForm = (selector) => {
             }
 
         if (!isValid(inputs)) return;
+
+        radioActive = 0;
 
         const formData = new FormData(form),
             data = {};
