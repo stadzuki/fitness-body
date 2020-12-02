@@ -2,11 +2,10 @@ import clubs from './calc';
 
 let tempPrice = clubs.mozaika.monthPay.oneMonth,
     selectedClub = clubs.mozaika,
-    month = 1;
-
-let priceTotal;
-
-let radioActive = 0;
+    month = 1,
+    priceTotal,
+    radioActive = 0,
+    isPromo = false;
 
 const cardOrder = document.getElementById('card_order');
 
@@ -44,32 +43,6 @@ const formFooter = () => {
 const formCalc = () => {
     const form = document.getElementById('card_order');
 
-    const getMonth = (elem, club) => {
-        switch (elem) {
-            case 1: {
-                tempPrice = club.monthPay.oneMonth;
-                month = 1;
-                break;
-            }
-            case 6: {
-                tempPrice = club.monthPay.sixMonth;
-                month = 6;
-                break;
-            }
-            case 9: {
-                tempPrice = club.monthPay.nineMonth;
-                month = 9;
-                break;
-            }
-            case 12: {
-                tempPrice = club.monthPay.twelfth;
-                month = 12;
-                break;
-            }
-        }
-        priceTotal.textContent = tempPrice;
-    }
-
     const changeClub = (target) => {
         if (target.value === 'mozaika') {
             selectedClub = clubs.mozaika;
@@ -82,15 +55,46 @@ const formCalc = () => {
     form.addEventListener('click', e => {
         if (e.target.closest('.time input')) {
             getMonth(+e.target.value, selectedClub);
+            isPromo = false;
+            updatePromo();
         }
 
         if (e.target.closest('.club')) {
             changeClub(e.target);
+            isPromo = false;
+            updatePromo();
         }
+        
+        // isPromo === true ? isPromo = false : isPromo = true;
     })
     postForm(form.id);
 }
 
+const getMonth = (elem, club) => {
+    switch (elem) {
+        case 1: {
+            tempPrice = club.monthPay.oneMonth;
+            month = 1;
+            break;
+        }
+        case 6: {
+            tempPrice = club.monthPay.sixMonth;
+            month = 6;
+            break;
+        }
+        case 9: {
+            tempPrice = club.monthPay.nineMonth;
+            month = 9;
+            break;
+        }
+        case 12: {
+            tempPrice = club.monthPay.twelfth;
+            month = 12;
+            break;
+        }
+    }
+    priceTotal.textContent = tempPrice;
+}
 
 const closePopup = () => {
     const popup = document.querySelectorAll('.popup');
@@ -115,7 +119,7 @@ const isValid = (inputs) => {
     let status = true;
     for (let key of inputs) {
         if (key.name === 'name') {
-            if (/^[А-я]{0,32}$/.test(key.value) === false) {
+            if (/^[А-я]{2,32}$/.test(key.value) === false) {
                 alert('Поле "имя" заполнено неправильно');
                 status = false;
                 break;
@@ -146,16 +150,22 @@ const isValid = (inputs) => {
                 break;
             }
         }
-        // if (key.name === 'promo') {
-        //     if (key.value === clubs.promocode) {
-        //         tempPrice *= 0.3;
-        //         priceTotal.textContent = Math.floor(tempPrice);
-        //     }
-        // }
     }
     return status;
 }
 
+const updatePromo = () => {
+    const target = document.querySelector('input[name="promo"]');
+
+    if (target.value === clubs.promocode && isPromo === false) {
+        tempPrice *= 0.7;
+        priceTotal.textContent = Math.floor(tempPrice);
+        isPromo = true;
+    } else {
+        isPromo = false;
+        getMonth(month, selectedClub);
+    }
+}
 
 const postForm = (selector) => {
     const form = document.getElementById(selector),
@@ -172,13 +182,9 @@ const postForm = (selector) => {
     })
 
     form.addEventListener('input', e => {
-        if (e.target.name === 'promo') {
-            if (e.target.value === clubs.promocode) {
-                tempPrice *= 0.3;
-                priceTotal.textContent = Math.floor(tempPrice);
-            }
-        }
+        if (e.target.name === 'promo') updatePromo();
     })
+
 
     form.addEventListener('submit', e => {
         e.preventDefault();

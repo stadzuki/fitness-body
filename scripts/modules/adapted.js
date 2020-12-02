@@ -1,3 +1,7 @@
+const burgerBtn = document.querySelector('.top-menu .menu-button'),
+    menu = document.querySelector('.top-menu'),
+    burger = document.querySelector('.popup-menu');
+
 const scrollTop = () => {
     const arrow = document.getElementById('totop');
 
@@ -10,16 +14,14 @@ const scrollTop = () => {
     })
 }
 
-const isMobile = () => {
-    const burgerBtn = document.querySelector('.top-menu .menu-button');
-    const menu = document.querySelector('.top-menu');
-    const burger = document.querySelector('.popup-menu');
-
+const mobile = () => {
     if(window.screen.availWidth < 768) {
         burgerBtn.classList.remove('hidden-large');
 
-        burgerBtn.addEventListener('click', () => {
-            burger.style.display = 'flex';
+        burgerBtn.addEventListener('click', (e) => {
+            if(e.target.closest('img')) {
+                burger.style.display = 'flex';
+            }
         });
 
         burger.addEventListener('click', e => {
@@ -27,15 +29,32 @@ const isMobile = () => {
                 burger.style.display = 'none'; 
             }
         })
-
         window.addEventListener('scroll', () => {
-            if(window.scrollY >= 185) {
+            if(window.scrollY >= 185 && window.screen.availWidth < 768) {
                 menu.classList.add('posFixed');
             } else {
                 menu.classList.remove('posFixed');
             }
         })
     }
+}
+
+const desk = () => {
+    if (window.screen.availWidth > 768){
+        burgerBtn.classList.add('hidden-large');
+        burger.style.display = 'none';
+    }
+}
+
+const isMobile = () => {
+    mobile();
+    desk();
+
+    window.addEventListener('resize', () => {
+        mobile();
+        desk();
+    })
+    
 }
 
 export default function init(){
