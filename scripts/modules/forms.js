@@ -127,7 +127,7 @@ const isValid = (inputs) => {
         }
         if (key.name === 'phone') {
             if (/^\+?7[0-9]{3}[0-9]{7}$/.test(key.value) === false) {
-                alert('Поле "телефон" заполнено неправильно');
+                alert('Поле "телефон" заполнено неправильно! Пример: +78403859320');
                 status = false;
                 break;
             }
